@@ -1,5 +1,5 @@
 # Evidencia_Proyecto
-<<<<<<< HEAD
+
 Evidencia del Proyecto Equipo 1
 
 # Tic Tac Toe
@@ -24,7 +24,9 @@ Este proyecto consiste en la modificación de un juego clásico de Tic Tac Toe (
 ## Autor
 - Nombre: Miguel Angel Becerra Ayala
 - Matrícula: A01710076
-=======
+
+
+
 
 Juego PAC-MAN
 
@@ -35,5 +37,12 @@ En este código, se modificaron algunas cosas las cuales son:
 
 - Cambio en el tablero: El mapa del juego ha sido modificado para crear una nueva distribución de caminos y paredes, ofreciendo una experiencia diferente.
 - Cambio en la forma y color del alimento: El alimento ahora tiene una forma y color diferente, pasando de ser círculos pequeños amarillos a una apariencia más destacada.
+
 - Fantasmas más rápidos: Se incrementó la velocidad de los fantasmas, lo que hace que el juego sea más desafiante y emocionante.
->>>>>>> pacman
+
+
+- Fantasmas más rápidos: Se incrementó la velocidad de los fantasmas, lo que hace que el juego sea más desafiante y emocionante.
+
+Sebastián Acosta Marín
+A01278278
+
