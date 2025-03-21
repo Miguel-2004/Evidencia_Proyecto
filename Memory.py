@@ -59,6 +59,15 @@ def draw():
 
     mark = state['mark']
 
+    # Comprobar que todos los pares han sido descubiertos
+    if all(not i for i in hide):
+        # Desplegar mensaje de juego terminado
+        up()
+        goto(-200, 0)
+        color('red')
+        write("Juego terminado :D", font = ('Arial', 30, 'normal'))
+        return
+
     if mark is not None and hide[mark]:
         x, y = xy(mark)
         up()
