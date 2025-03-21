@@ -39,7 +39,7 @@ ghosts = [
 # y los 2 son los puntos que Pac-Man puede comer.
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
     0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
     0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
@@ -109,52 +109,68 @@ def world():
         if tile > 0:  # Si el tile es un camino
             x = (index % 20) * 20 - 200  # Calcula la posición x del tile
             y = 180 - (index // 20) * 20  # Calcula la posición y del tile
-            square(x, y)  # Dibuja el cuadrado
+            square(x, y)  # Dibuja el cuadrado en la posición correspondiente
 
-            if tile == 1:  # Si el tile es un camino (1)
-                path.up()
-                path.goto(x + 10, y + 10)  # Posiciona el puntero en el centro del tile
-                path.dot(2, 'white')  # Dibuja un punto blanco en el centro del tile
-
-# Función para mover a Pac-Man y los fantasmas
+# Función para mover Pac-Man en la dirección deseada
 def move():
-    """Move pacman and all ghosts."""
-    writer.undo()  # Elimina el puntaje actual
-    writer.write(state['score'])  # Muestra el puntaje actualizado
+    """Move pacman in the direction of aim."""
+    pacman.move(aim)  # Mueve Pac-Man en la dirección de 'aim'
 
-    clear()  # Borra la pantalla
+    if not valid(pacman):  # Si la nueva posición de Pac-Man no es válida
+        pacman.move(-aim)  # Retrocede Pac-Man al lugar anterior
 
-    # Mueve a Pac-Man si la dirección es válida
-    if valid(pacman + aim):
-        pacman.move(aim)
+# Función para controlar las teclas de dirección
+def change(x, y):
+    """Change pacman aim to x, y."""
+    aim.x = x
+    aim.y = y
 
-    # Obtiene el índice del tile en el que se encuentra Pac-Man
-    index = offset(pacman)
+# Función para verificar si Pac-Man ha comido un punto
+def eat():
+    """Eat point if pacman is on a point."""
+    index = offset(pacman)  # Obtiene el índice de la posición de Pac-Man
+    if tiles[index] == 2:  # Si el tile es un punto (2)
+        tiles[index] = 1  # Cambia el tile a camino (1)
+        state['score'] += 10  # Aumenta la puntuación
 
-    # Si Pac-Man ha llegado a un punto comestible (valor 2)
-    if tiles[index] == 2:
-        tiles[index] = 1  # El punto se elimina del mapa
-        state['score'] += 1  # Aumenta el puntaje
-
-    # Mueve a cada uno de los fantasmas
+# Función para verificar si un fantasma ha atrapado a Pac-Man
+def collide():
+    """Check if pacman collides with any ghost."""
     for ghost in ghosts:
-        ghost[0].move(ghost[1])
+        if pacman.distance(ghost[0]) < 20:  # Si Pac-Man está demasiado cerca de un fantasma
+            return True
+    return False
 
-    world()  # Dibuja el mapa
-    move()   # Continúa el movimiento
-    done()   # Finaliza el juego
+# Función principal que se ejecuta en un bucle continuo
+def game():
+    """Run the game loop."""
+    move()  # Mueve Pac-Man
+    eat()  # Verifica si Pac-Man ha comido un punto
 
-# Control del teclado
-key(lambda: change(5, 0), 'Right')  # Movimiento hacia la derecha
-key(lambda: change(-5, 0), 'Left')  # Movimiento hacia la izquierda
-key(lambda: change(0, 5), 'Up')  # Movimiento hacia arriba
-key(lambda: change(0, -5), 'Down')  # Movimiento hacia abajo
+    if collide():  # Si Pac-Man choca con un fantasma
+        print(f"Game Over. Score: {state['score']}")  # Muestra el puntaje final
+        return  # Termina el juego
 
-# Dibuja el mapa
-world()
+    writer.clear()  # Limpia el puntaje anterior
+    writer.write(f"Score: {state['score']}", align='center', font=('Courier', 16, 'normal'))  # Muestra el puntaje actualizado
 
-# Inicia el movimiento
-move()
+    update()  # Actualiza la pantalla
+    ontimer(game, 100)  # Ejecuta el juego nuevamente después de 100 milisegundos
 
-# Finaliza el juego
+# Inicia el juego
+setup(420, 420, 370, 0)  # Configura la ventana del juego
+hideturtle()  # Oculta el puntero de la tortuga
+tracer(0)  # Desactiva la animación automática
+world()  # Dibuja el mundo
+writer.goto(0, 160)  # Coloca el escritor en la parte superior
+writer.color('white')  # Define el color blanco para el texto
+writer.write(f"Score: {state['score']}", align='center', font=('Courier', 16, 'normal'))  # Muestra el puntaje inicial
+listen()  # Escucha los eventos de teclado
+onkey(lambda: change(5, 0), 'Right')  # Mueve Pac-Man a la derecha
+onkey(lambda: change(-5, 0), 'Left')  # Mueve Pac-Man a la izquierda
+onkey(lambda: change(0, 5), 'Up')  # Mueve Pac-Man hacia arriba
+onkey(lambda: change(0, -5), 'Down')  # Mueve Pac-Man hacia abajo
+
+# Ejecuta el bucle principal del juego
+game()
 done()
