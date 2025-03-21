@@ -1,25 +1,19 @@
 # Evidencia_Proyecto
 Evidencia del Proyecto Equipo 1
 
-# Tic Tac Toe
+# Juego de Memoria
 
 ## Descripción
-Este proyecto consiste en la modificación de un juego clásico de Tic Tac Toe (Tres en Raya) utilizando Python y la biblioteca `turtle`. Se implementaron mejoras al código base, siguiendo estándares de programación y buenas prácticas.
+Modificación de juego de memoria para optimización.
 
 ## Modificaciones Realizadas
-1. **Cambiar el tamaño y color de "X" y "O"**:
-   - Las "X" se dibujan en azul con un grosor de 5.
-   - Las "O" se dibujan en rojo con un grosor de 5.
+1. **Contar y desplegar el numero de pares descubiertos.**
 
-2. **Validar si una casilla ya está ocupada**:
-   - Se agregó una lista `board` para rastrear las casillas ocupadas.
-   - Si una casilla ya está ocupada, no se permite colocar una marca.
+2. **Detectar cuando todos los cuadros se han destapado.**
 
-3. **Determinar cuándo el juego ha terminado**:
-   - Se implementó la función `check_winner` para verificar si hay un ganador o un empate.
-   - Al finalizar el juego, se muestra un mensaje en la pantalla indicando el resultado.
+3. **Cambiar el número de casillas del tablero.**
 
 
-## Autor
-- Nombre: Miguel Angel Becerra Ayala
-- Matrícula: A01710076
+## Datos personales
+- Nombre: Shaula Suhail Paz Garay
+- Matrícula: A01712013
