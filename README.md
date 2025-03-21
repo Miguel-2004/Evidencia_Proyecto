@@ -10,6 +10,5 @@ Este es un juego de Tic Tac Toe modificado como parte de una evidencia de proyec
 3. Detección del fin del juego (ganador o empate).
 
 ## Autor
-- Nombre: [Tu nombre]
-- Matrícula: [Tu matrícula]
-- Curso: [Nombre del curso]
+- Nombre: Miguel Angel Becerra Ayala
+- Matrícula: A01710076
