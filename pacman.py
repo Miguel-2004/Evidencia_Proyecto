@@ -27,12 +27,14 @@ aim = vector(5, 0)
 pacman = vector(-40, -80)
 
 # Se definen los fantasmas, cada uno con una posición y una dirección de movimiento
+# Aumentamos las velocidades de los fantasmas (más rápido)
 ghosts = [
-    [vector(-180, 160), vector(5, 0)],  # Fantasma 1
-    [vector(-180, -160), vector(0, 5)],  # Fantasma 2
-    [vector(100, 160), vector(0, -5)],   # Fantasma 3
-    [vector(100, -160), vector(-5, 0)],  # Fantasma 4
+    [vector(-180, 160), vector(10, 0)],  # Fantasma 1 (más rápido)
+    [vector(-180, -160), vector(0, 10)],  # Fantasma 2 (más rápido)
+    [vector(100, 160), vector(0, -10)],   # Fantasma 3 (más rápido)
+    [vector(100, -160), vector(-10, 0)],  # Fantasma 4 (más rápido)
 ]
+
 
 # Se define el mapa del juego con un arreglo de 1s, 0s y 2s.
 # Los 1 representan caminos transitables, los 0 son paredes,
