@@ -27,7 +27,7 @@ Este proyecto consiste en la modificación de un juego clásico de Tic Tac Toe (
 
 
 
-
+# Juego de Pacman
 Juego PAC-MAN
 
 Este es un juego de Pac-Man implementado en Python usando la librería turtle. El juego presenta a Pac-Man en un mapa con puntos que puede comer y fantasmas que lo persiguen. La versión actual incluye mejoras como la velocidad incrementada de los fantasmas.
@@ -40,7 +40,10 @@ En este código, se modificaron algunas cosas las cuales son:
 
 - Fantasmas más rápidos: Se incrementó la velocidad de los fantasmas, lo que hace que el juego sea más desafiante y emocionante.
 
-
+## Datos personales
+- Sebastián Acosta Marín
+- A01278278
+  
 
 
 # Juego de Memoria
