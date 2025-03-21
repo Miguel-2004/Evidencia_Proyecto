@@ -3,9 +3,11 @@ from turtle import *
 from freegames import path
 
 car = path('car.gif')
-tiles = list(range(32)) * 2
+# Cambio del número de tarjetas
+tiles = list(range(50)) * 2
 state = {'mark': None}
-hide = [True] * 64
+# Adaptación al número declarado arriba
+hide = [True] * 100
 # Declaración de variable "pares" para acumular pares descubiertos
 pares = 0
 
@@ -17,17 +19,19 @@ def square(x, y):
     color('black', 'white')
     begin_fill()
     for count in range(4):
-        forward(50)
+        # Adaptación de las unidades para hacer el tablero del mismo tamaño
+        forward(45)
         left(90)
     end_fill()
 
+# Cambio para adaptar coordenadas a nuevo número de tarjetas (en 'index' y 'xy')
 def index(x, y):
     "Convert (x, y) coordinates to tiles index."
-    return int((x + 200) // 50 + ((y + 200) // 50) * 8)
+    return int((x + 250) // 45 + ((y + 250) // 45) * 10)
 
 def xy(count):
     "Convert tiles count to (x, y) coordinates."
-    return (count % 8) * 50 - 200, (count // 8) * 50 - 200
+    return (count % 10) * 45 - 250, (count // 10) * 45 - 250
 
 def tap(x, y):
     "Update mark and hidden tiles based on tap."
@@ -52,7 +56,8 @@ def draw():
     shape(car)
     stamp()
 
-    for count in range(64):
+    # Adaptación a las 100 tarjetas
+    for count in range(100):
         if hide[count]:
             x, y = xy(count)
             square(x, y)
