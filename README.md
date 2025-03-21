@@ -40,10 +40,6 @@ En este código, se modificaron algunas cosas las cuales son:
 
 - Fantasmas más rápidos: Se incrementó la velocidad de los fantasmas, lo que hace que el juego sea más desafiante y emocionante.
 
-# Evidencia_Proyecto
-Evidencia del Proyecto Equipo 1
-
-
 
 
 
