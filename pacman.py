@@ -1,136 +1,187 @@
-from random import choice  # Importa la función choice para seleccionar aleatoriamente entre opciones
-from turtle import *  # Importa todas las funciones del módulo turtle para gráficos
-from freegames import floor, vector  # Importa las funciones floor y vector desde freegames
+# Importa la función `choice` para seleccionar un elemento aleatorio y las funciones necesarias de turtle
+from random import choice
+from turtle import *
+# Importa las funciones `floor` y `vector` desde la librería 'freegames'
+from freegames import floor, vector
 
-state = {'score': 0}  # Define un diccionario que contiene la puntuación del juego
-path = Turtle(visible=False)  # Crea un objeto Turtle que será usado para dibujar el mapa
-writer = Turtle(visible=False)  # Crea otro Turtle para escribir el puntaje
-aim = vector(5, 0)  # Establece la dirección inicial del movimiento de Pacman (a la derecha)
-pacman = vector(-40, -80)  # Establece la posición inicial de Pacman
-ghosts = [  # Define una lista de fantasmas, cada uno tiene una posición y una dirección
-    [vector(-180, 160), vector(5, 0)],
-    [vector(-180, -160), vector(0, 5)],
-    [vector(100, 160), vector(0, -5)],
-    [vector(100, -160), vector(-5, 0)],
+# Se define el estado del juego, que incluye la puntuación actual
+state = {'score': 0}
+
+# Se crean dos objetos Turtle, uno para dibujar el camino (`path`) y otro para mostrar el puntaje (`writer`)
+path = Turtle(visible=False)
+writer = Turtle(visible=False)
+
+# Se define la dirección de movimiento de Pac-Man
+aim = vector(5, 0)
+# Se define la posición inicial de Pac-Man
+pacman = vector(-40, -80)
+
+# Se definen los fantasmas, cada uno con una posición y una dirección de movimiento
+ghosts = [
+    [vector(-180, 160), vector(5, 0)],  # Fantasma 1
+    [vector(-180, -160), vector(0, 5)],  # Fantasma 2
+    [vector(100, 160), vector(0, -5)],   # Fantasma 3
+    [vector(100, -160), vector(-5, 0)],  # Fantasma 4
 ]
 
-tiles = [  # Representa el mapa del juego en una lista de ceros (vacío), unos (camino) y dos (comida)
-    # ... Aquí está la representación completa del mapa ...
+# Se define el mapa del juego con un arreglo de 1s, 0s y 2s. Los 1 representan caminos transitables, 
+# los 0 son paredes, y los 2 son los puntos que Pac-Man puede comer.
+tiles = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0,
+    0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ]
 
-def square(x, y):  # Función para dibujar un cuadrado en las coordenadas (x, y)
-    path.up()  # Levanta el lápiz para moverlo sin dibujar
-    path.goto(x, y)  # Mueve el lápiz a la posición (x, y)
-    path.down()  # Baja el lápiz para empezar a dibujar
-    path.begin_fill()  # Inicia el relleno del cuadrado
+# Función para dibujar un cuadrado en las coordenadas (x, y) usando el objeto path
+def square(x, y):
+    "Draw square using path at (x, y)."
+    path.up()
+    path.goto(x, y)  # Moverse a las coordenadas (x, y)
+    path.down()
+    path.begin_fill()  # Comienza a llenar el cuadrado
 
-    for count in range(4):  # Dibuja un cuadrado de 4 lados
+    for count in range(4):
         path.forward(20)  # Avanza 20 unidades
-        path.left(90)  # Gira 90 grados a la izquierda
+        path.left(90)     # Gira 90 grados
 
-    path.end_fill()  # Finaliza el relleno del cuadrado
+    path.end_fill()  # Termina de llenar el cuadrado
 
-def offset(point):  # Convierte las coordenadas del punto en un índice dentro de la lista de tiles
-    x = (floor(point.x, 20) + 200) / 20  # Redondea las coordenadas al múltiplo más cercano de 20 y las convierte en índice
-    y = (180 - floor(point.y, 20)) / 20  # Hace lo mismo para el eje y
-    index = int(x + y * 20)  # Calcula el índice de la lista de tiles
+# Función para obtener el índice de una posición en el mapa
+def offset(point):
+    "Return offset of point in tiles."
+    x = (floor(point.x, 20) + 200) / 20  # Redondea y escala la coordenada x
+    y = (180 - floor(point.y, 20)) / 20   # Redondea y escala la coordenada y
+    index = int(x + y * 20)  # Calcula el índice de la posición en la lista de tiles
     return index
 
-def valid(point):  # Verifica si un punto es válido dentro del mapa
-    index = offset(point)  # Obtiene el índice correspondiente al punto
+# Función para comprobar si un punto es válido en el mapa
+def valid(point):
+    "Return True if point is valid in tiles."
+    index = offset(point)
 
-    if tiles[index] == 0:  # Si el tile en esa posición es 0 (vacío), no es válido
+    if tiles[index] == 0:  # Si la posición es una pared (0), no es válida
         return False
 
-    index = offset(point + 19)  # Verifica también si el siguiente punto (más a la derecha o abajo) es válido
+    index = offset(point + 19)  # Comprobamos el borde derecho de la celda
 
-    if tiles[index] == 0:  # Si el tile en esa posición es 0 (vacío), no es válido
+    if tiles[index] == 0:  # Si la posición es una pared (0), no es válida
         return False
 
-    return point.x % 20 == 0 or point.y % 20 == 0  # Asegura que la posición esté alineada con la cuadrícula
+    return point.x % 20 == 0 or point.y % 20 == 0  # Asegura que el punto esté alineado en la cuadrícula
 
-def world():  # Dibuja el mundo (el mapa de juego)
-    bgcolor('black')  # Establece el fondo negro
-    path.color('blue')  # Establece el color de la ruta como azul
+# Función para dibujar el mundo (mapa de juego)
+def world():
+    "Draw world using path."
+    bgcolor('black')  # Fondo negro
+    path.color('blue')  # Color azul para el camino
 
-    for index in range(len(tiles)):  # Itera a través de todos los tiles
-        tile = tiles[index]  # Obtiene el valor del tile en la posición actual
+    for index in range(len(tiles)):  # Itera sobre cada tile del mapa
+        tile = tiles[index]  # Obtiene el valor del tile (1 = camino, 0 = pared)
 
-        if tile > 0:  # Si el tile no es vacío
+        if tile > 0:  # Si el tile es un camino
             x = (index % 20) * 20 - 200  # Calcula la posición x del tile
             y = 180 - (index // 20) * 20  # Calcula la posición y del tile
-            square(x, y)  # Dibuja el cuadrado en la posición
+            square(x, y)  # Dibuja el cuadrado
 
             if tile == 1:  # Si el tile es un camino (1)
                 path.up()
-                path.goto(x + 10, y + 10)  # Mueve el lápiz al centro del tile
-                path.dot(2, 'white')  # Dibuja un punto blanco (la comida)
+                path.goto(x + 10, y + 10)  # Posiciona el puntero en el centro del tile
+                path.dot(2, 'white')  # Dibuja un punto blanco en el centro del tile
 
-def move():  # Función que mueve a Pacman y a los fantasmas
-    writer.undo()  # Borra el puntaje anterior
-    writer.write(state['score'])  # Escribe el puntaje actual
+# Función para mover a Pac-Man y los fantasmas
+def move():
+    "Move pacman and all ghosts."
+    writer.undo()  # Elimina el puntaje actual
+    writer.write(state['score'])  # Muestra el puntaje actualizado
 
-    clear()  # Limpia la pantalla para redibujar
+    clear()  # Borra la pantalla
 
-    if valid(pacman + aim):  # Si el siguiente movimiento de Pacman es válido
-        pacman.move(aim)  # Mueve a Pacman
+    # Mueve a Pac-Man si la dirección es válida
+    if valid(pacman + aim):
+        pacman.move(aim)
 
-    index = offset(pacman)  # Obtiene el índice del tile donde se encuentra Pacman
+    # Obtiene el índice del tile en el que se encuentra Pac-Man
+    index = offset(pacman)
 
-    if tiles[index] == 1:  # Si el tile es una comida (1)
-        tiles[index] = 2  # Marca el tile como comido (2)
+    # Si el tile es un punto (1), lo marca como comido (2) y aumenta la puntuación
+    if tiles[index] == 1:
+        tiles[index] = 2
         state['score'] += 1  # Aumenta el puntaje
-        x = (index % 20) * 20 - 200  # Calcula la posición del tile
-        y = 180 - (index // 20) * 20
-        square(x, y)  # Dibuja el tile con la comida comido
+        x = (index % 20) * 20 - 200  # Calcula la posición x del tile
+        y = 180 - (index // 20) * 20  # Calcula la posición y del tile
+        square(x, y)  # Redibuja el cuadrado
 
-    up()  # Levanta el lápiz para mover a Pacman
-    goto(pacman.x + 10, pacman.y + 10)  # Mueve el lápiz a la posición de Pacman
-    dot(20, 'yellow')  # Dibuja a Pacman como un círculo amarillo
+    # Dibuja a Pac-Man en la nueva posición
+    up()
+    goto(pacman.x + 10, pacman.y + 10)  # Posición de Pac-Man
+    dot(20, 'yellow')  # Dibuja el círculo de Pac-Man
 
-    for point, course in ghosts:  # Mueve los fantasmas
-        if valid(point + course):  # Si el movimiento del fantasma es válido
-            point.move(course)  # Mueve al fantasma
-        else:  # Si no es válido, elige un nuevo movimiento aleatorio
+    # Mueve a los fantasmas
+    for point, course in ghosts:
+        if valid(point + course):  # Si la siguiente posición del fantasma es válida
+            point.move(course)
+        else:
             options = [
                 vector(5, 0),
                 vector(-5, 0),
                 vector(0, 5),
                 vector(0, -5),
-            ]
-            plan = choice(options)  # Selecciona un movimiento aleatorio
+            ]  # Opciones de movimiento para el fantasma
+            plan = choice(options)  # Elige un movimiento aleatorio
             course.x = plan.x
             course.y = plan.y
 
-        up()  # Levanta el lápiz para mover el fantasma
-        goto(point.x + 10, point.y + 10)  # Mueve el lápiz a la posición del fantasma
-        dot(20, 'red')  # Dibuja al fantasma como un círculo rojo
+        # Dibuja el fantasma en la nueva posición
+        up()
+        goto(point.x + 10, point.y + 10)  # Posición del fantasma
+        dot(20, 'red')  # Dibuja el círculo del fantasma en rojo
 
     update()  # Actualiza la pantalla
 
-    for point, course in ghosts:  # Verifica si Pacman colisiona con algún fantasma
-        if abs(pacman - point) < 20:  # Si la distancia entre Pacman y un fantasma es menor a 20
-            return  # Termina el juego si hay colisión
+    # Verifica si Pac-Man ha chocado con algún fantasma
+    for point, course in ghosts:
+        if abs(pacman - point) < 20:  # Si Pac-Man está cerca de un fantasma
+            return  # Fin del juego si Pac-Man choca con un fantasma
 
-    ontimer(move, 100)  # Llama a la función move nuevamente después de 100ms
+    # Llama a la función 'move' cada 100 milisegundos para seguir el juego
+    ontimer(move, 100)
 
-def change(x, y):  # Cambia la dirección de Pacman si es válida
-    if valid(pacman + vector(x, y)):  # Si la dirección es válida
-        aim.x = x  # Cambia la dirección en x
-        aim.y = y  # Cambia la dirección en y
+# Función para cambiar la dirección de Pac-Man
+def change(x, y):
+    "Change pacman aim if valid."
+    if valid(pacman + vector(x, y)):  # Si el movimiento es válido
+        aim.x = x
+        aim.y = y  # Cambia la dirección de Pac-Man
 
-setup(420, 420, 370, 0)  # Establece el tamaño y la posición de la ventana de juego
+# Configura la ventana de juego
+setup(420, 420, 370, 0)  # Tamaño de la ventana
 hideturtle()  # Oculta el cursor de la tortuga
-tracer(False)  # Desactiva la actualización automática de la pantalla
-writer.goto(160, 160)  # Establece la posición del escritor (donde se muestra el puntaje)
-writer.color('white')  # Establece el color de texto como blanco
-writer.write(state['score'])  # Escribe el puntaje inicial
-listen()  # Escucha las teclas presionadas
-onkey(lambda: change(5, 0), 'Right')  # Si se presiona la tecla 'Right', mueve a la derecha
-onkey(lambda: change(-5, 0), 'Left')  # Si se presiona la tecla 'Left', mueve a la izquierda
-onkey(lambda: change(0, 5), 'Up')  # Si se presiona la tecla 'Up', mueve hacia arriba
-onkey(lambda: change(0, -5), 'Down')  # Si se presiona la tecla 'Down', mueve hacia abajo
-world()  # Dibuja el mundo (el mapa)
-move()  # Inicia el movimiento de Pacman y los fantasmas
+tracer(False)  # Desactiva el trazado para mejorar el rendimiento
+writer.goto(160, 160)  # Posición del puntaje
+writer.color('white')  # Color del texto
+writer.write(state['score'])  # Muestra el puntaje inicial
+listen()  # Activa el escuchar las teclas
+onkey(lambda: change(5, 0), 'Right')  # Movimiento hacia la derecha
+onkey(lambda: change(-5, 0), 'Left')  # Movimiento hacia la izquierda
+onkey(lambda: change(0, 5), 'Up')  # Movimiento hacia arriba
+onkey(lambda: change(0, -5), 'Down')  # Movimiento hacia abajo
+world()  # Dibuja el mapa
+move()  # Inicia el movimiento
 done()  # Finaliza el juego
-
