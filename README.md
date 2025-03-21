@@ -8,11 +8,7 @@ Modificación de juego de memoria para optimización.
 
 ## Modificaciones Realizadas
 1. **Contar y desplegar el numero de pares descubiertos.**
-
-2. **Detectar cuando todos los cuadros se han destapado.**
-
-3. **Cambiar el número de casillas del tablero.**
-
+Se agrega un contador de los pares encontrados en la parte superior del juego.
 
 ## Datos personales
 - Nombre: Shaula Suhail Paz Garay

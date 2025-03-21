@@ -6,6 +6,8 @@ car = path('car.gif')
 tiles = list(range(32)) * 2
 state = {'mark': None}
 hide = [True] * 64
+# Declaración de variable "pares" para acumular pares descubiertos
+pares = 0
 
 def square(x, y):
     "Draw white square with black outline at (x, y)."
@@ -29,6 +31,8 @@ def xy(count):
 
 def tap(x, y):
     "Update mark and hidden tiles based on tap."
+    # Uso de variable global para acumulación general
+    global pares
     spot = index(x, y)
     mark = state['mark']
 
@@ -37,6 +41,8 @@ def tap(x, y):
     else:
         hide[spot] = False
         hide[mark] = False
+        # Aumento a variable cuando un par es encontrado
+        pares += 1
         state['mark'] = None
 
 def draw():
@@ -60,6 +66,11 @@ def draw():
         color('black')
         write(tiles[mark], font=('Arial', 30, 'normal'))
 
+    # Despliegue de pares encontrados
+    up()
+    goto(-200, 200)
+    color('green')
+    write(f'Pares encontrados: {pares}', font = ('Arial', 30, 'normal'))
     update()
     ontimer(draw, 100)
 
@@ -71,3 +82,4 @@ tracer(False)
 onscreenclick(tap)
 draw()
 done()
+Logo
