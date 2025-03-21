@@ -13,17 +13,19 @@ def grid():
 
 def drawx(x, y):
     """Draw X player."""
+    color("blue")  # Cambia el color a azul
+    width(5)       # Cambia el grosor de la línea
     line(x, y, x + 133, y + 133)
     line(x, y + 133, x + 133, y)
 
-
 def drawo(x, y):
     """Draw O player."""
+    color("red")   # Cambia el color a rojo
+    width(5)       # Cambia el grosor de la línea
     up()
     goto(x + 67, y + 5)
     down()
     circle(62)
-
 
 def floor(value):
     """Round value down to grid with square size 133."""
