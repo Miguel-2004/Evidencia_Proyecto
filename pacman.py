@@ -60,19 +60,16 @@ tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ]
 
-# Función para dibujar un cuadrado en las coordenadas (x, y) usando el objeto path
-def square(x, y):
-    """Draw square using path at (x, y)."""
+# Función para dibujar un círculo como el alimento
+def food(x, y):
+    """Draw food using path at (x, y)."""
     path.up()
     path.goto(x, y)  # Moverse a las coordenadas (x, y)
     path.down()
-    path.begin_fill()  # Comienza a llenar el cuadrado
-
-    for count in range(4):
-        path.forward(20)  # Avanza 20 unidades
-        path.left(90)     # Gira 90 grados
-
-    path.end_fill()  # Termina de llenar el cuadrado
+    path.color("yellow")  # Color amarillo para el alimento
+    path.begin_fill()  # Comienza a llenar el círculo
+    path.circle(5)  # Dibuja un círculo con radio 5
+    path.end_fill()  # Termina de llenar el círculo
 
 # Función para obtener el índice de una posición en el mapa
 def offset(point):
@@ -106,71 +103,31 @@ def world():
     for index in range(len(tiles)):  # Itera sobre cada tile del mapa
         tile = tiles[index]  # Obtiene el valor del tile (1 = camino, 0 = pared)
 
+        if tile == 2:  # Si el tile es un punto comestible
+            x = (index % 20) * 20 - 200  # Calcula la posición x del tile
+            y = 180 - (index // 20) * 20  # Calcula la posición y del tile
+            food(x, y)  # Dibuja el círculo (alimento)
+
         if tile > 0:  # Si el tile es un camino
             x = (index % 20) * 20 - 200  # Calcula la posición x del tile
             y = 180 - (index // 20) * 20  # Calcula la posición y del tile
-            square(x, y)  # Dibuja el cuadrado en la posición correspondiente
+            path.up()
+            path.goto(x, y)  # Moverse a las coordenadas (x, y)
+            path.down()
+            path.begin_fill()  # Comienza a llenar el camino
+            for _ in range(4):  # Dibuja un cuadrado de 20x20
+                path.forward(20)
+                path.left(90)
+            path.end_fill()  # Termina de llenar el cuadrado
 
-# Función para mover Pac-Man en la dirección deseada
-def move():
-    """Move pacman in the direction of aim."""
-    pacman.move(aim)  # Mueve Pac-Man en la dirección de 'aim'
+# Función principal que inicia el juego
+def main():
+    """Run Pac-Man."""
+    setup(420, 420, 370, 0)  # Configura la ventana de juego
+    tracer(False)  # Desactiva la animación para optimizar
+    world()  # Dibuja el mundo (mapa)
+    tracer(True)  # Vuelve a activar la animación
+    done()  # Finaliza el juego
 
-    if not valid(pacman):  # Si la nueva posición de Pac-Man no es válida
-        pacman.move(-aim)  # Retrocede Pac-Man al lugar anterior
-
-# Función para controlar las teclas de dirección
-def change(x, y):
-    """Change pacman aim to x, y."""
-    aim.x = x
-    aim.y = y
-
-# Función para verificar si Pac-Man ha comido un punto
-def eat():
-    """Eat point if pacman is on a point."""
-    index = offset(pacman)  # Obtiene el índice de la posición de Pac-Man
-    if tiles[index] == 2:  # Si el tile es un punto (2)
-        tiles[index] = 1  # Cambia el tile a camino (1)
-        state['score'] += 10  # Aumenta la puntuación
-
-# Función para verificar si un fantasma ha atrapado a Pac-Man
-def collide():
-    """Check if pacman collides with any ghost."""
-    for ghost in ghosts:
-        if pacman.distance(ghost[0]) < 20:  # Si Pac-Man está demasiado cerca de un fantasma
-            return True
-    return False
-
-# Función principal que se ejecuta en un bucle continuo
-def game():
-    """Run the game loop."""
-    move()  # Mueve Pac-Man
-    eat()  # Verifica si Pac-Man ha comido un punto
-
-    if collide():  # Si Pac-Man choca con un fantasma
-        print(f"Game Over. Score: {state['score']}")  # Muestra el puntaje final
-        return  # Termina el juego
-
-    writer.clear()  # Limpia el puntaje anterior
-    writer.write(f"Score: {state['score']}", align='center', font=('Courier', 16, 'normal'))  # Muestra el puntaje actualizado
-
-    update()  # Actualiza la pantalla
-    ontimer(game, 100)  # Ejecuta el juego nuevamente después de 100 milisegundos
-
-# Inicia el juego
-setup(420, 420, 370, 0)  # Configura la ventana del juego
-hideturtle()  # Oculta el puntero de la tortuga
-tracer(0)  # Desactiva la animación automática
-world()  # Dibuja el mundo
-writer.goto(0, 160)  # Coloca el escritor en la parte superior
-writer.color('white')  # Define el color blanco para el texto
-writer.write(f"Score: {state['score']}", align='center', font=('Courier', 16, 'normal'))  # Muestra el puntaje inicial
-listen()  # Escucha los eventos de teclado
-onkey(lambda: change(5, 0), 'Right')  # Mueve Pac-Man a la derecha
-onkey(lambda: change(-5, 0), 'Left')  # Mueve Pac-Man a la izquierda
-onkey(lambda: change(0, 5), 'Up')  # Mueve Pac-Man hacia arriba
-onkey(lambda: change(0, -5), 'Down')  # Mueve Pac-Man hacia abajo
-
-# Ejecuta el bucle principal del juego
-game()
-done()
+# Inicia el juego llamando a la función principal
+main()
